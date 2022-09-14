@@ -11,13 +11,19 @@ from pybricks.tools import DataLog, StopWatch, wait
 from turn import *
 
 # # Initialize the brick
-# ev3 = EV3Brick()
+ev3 = EV3Brick()
 
-# left_motor = Motor(Port.A)
-# right_motor = Motor(Port.D)
+# Initializing the turning functions
+
+
+left_motor = Motor(Port.A)
+right_motor = Motor(Port.D)
 # arm_rotator = Motor(Port.C)
 # arm_claw = Motor(Port.B)
 
+turn = Turning(left_motor, right_motor)
+
+turn.SmoothStart_Left(100, 100, 30, 200)
 
 # # Initialize the color sensor.
 # front_light = ColorSensor(Port.S1)

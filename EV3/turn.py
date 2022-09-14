@@ -112,7 +112,7 @@ class Turning():
 			u = Ratio.Arc_kp * e + Ratio.Arc_kd * (e - e_old) + isum
 			e_old = e
 
-			CurrentPower.LMotor = self.Stop_Smooth(maxPowerL, minPowerL, speedL, self.boost)
+			CurrentPower.LMotor = self.Stop_Smooth(maxPowerL, minPowerL, speedL, boost)
 			CurrentPower.RMotor = minPowerR / minPowerL * CurrentPower.LMotor # Sets the right motor to the ratio with the left motor
 
 			# Drives the motors
@@ -205,10 +205,15 @@ class Turning():
 			u = Ratio.Arc_kp * e + Ratio.Arc_kd * (e - e_old) + isum
 			e_old = e
 
-			CurrentPower.RMotor = self.Stop_Smooth(maxPowerR, minPowerR, speedR, self.boost)
+			CurrentPower.RMotor = self.Stop_Smooth(maxPowerR, minPowerR, speedR, boost)
 			CurrentPower.LMotor = minPowerL / minPowerR * CurrentPower.RMotor # Sets the right motor to the ratio with the left motor
 
 			# Drives the motors
 			print(CurrentPower.LMotor, CurrentPower.RMotor)
 			self.right_drive.DC(CurrentPower.RMotor - u)
 			self.left_drive.DC(CurrentPower.LMotor - u * sign)
+
+	# Function for smooth turning
+	# AKA stationary turning
+	def SmoothAll(self):
+		raise NotImplementedError
