@@ -217,15 +217,14 @@ class Turning():
 
 	# Function for smooth turning
 	# AKA stationary turning
-<<<<<<< Updated upstream:turn.py
-	def SmoothAll(self, sPowerL, sPowerR, ePowerL, enc):
+	def SmoothAll_L(self, sPowerL, sPowerR, ePowerL, enc):
 		ratio = math.abs(sPowerL / sPowerR)
 		sign = math.abs(sPowerL * sPowerR - 1) - math.abs(sPowerL * sPowerR)
 		e_old = 0
 		
 		# Inilializing speed variables
-		pastSpeedR = self.right_drive.speed()
-		pastSpeedL = self.left_drive.speed()
+		pastSpeedR = self.right_drive.angle()
+		pastSpeedL = self.left_drive.angle()
 		speedR = 0
 		speedL = 0
 
@@ -246,8 +245,8 @@ class Turning():
 		startEnc = startEnc * maxPowerL_sign
 
 		while math.abs(speedR) + math.abs(speedL) < enc:
-			speedR = self.right_drive.speed() - pastSpeedR
-			speedL = self.left_drive.speed() - pastSpeedL
+			speedR = self.right_drive.angle() - pastSpeedR
+			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
 			isum = isum + Ratio.Arc_ki * e
 
@@ -270,8 +269,56 @@ class Turning():
 			self.left_drive.DC(CurrentPower.LMotor - u * sign)
 			self.right_drive.DC(CurrentPower.RMotor - u)
 		
-=======
-	def SmoothAll(self):
+	
+	def SmoothAll_R(self, sPowerL, sPowerR, ePowerR, enc):
+		ratio = math.abs(sPowerL / sPowerR)
+		sign = math.abs(sPowerL * sPowerR - 1) - math.abs(sPowerL * sPowerR)
+		e_old = 0
+		
+		# Inilializing speed variables
+		pastSpeedR = self.right_drive.angle()
+		pastSpeedL = self.left_drive.angle()
+		speedR = 0
+		speedL = 0
 
-		raise NotImplementedError
->>>>>>> Stashed changes:EV3/turn.py
+		isum = 0
+		enc = enc * 2
+		benc = enc - enc / (ratio + 1)
+		excess = benc - (20000 - sPowerL * sPowerL - ePowerR * ePowerR) / 2 / self.boost
+
+		if excess <= 0:
+			maxPowerL = math.sqrt(benc * self.boost + sPowerL * sPowerL / 2 + ePowerR * ePowerR / 2)
+			startEnc = (maxPowerL * maxPowerL - sPowerL * sPowerL) / 2 / self.boost
+		else:
+			maxPowerL = 100
+			startEnc = (10000 - sPowerL * sPowerL) / 2 / self.boost + excess
+		
+		maxPowerL_sign = sPowerL / math.abs(sPowerL)
+		maxPowerL = maxPowerL * maxPowerL_sign
+		startEnc = startEnc * maxPowerL_sign
+
+		while math.abs(speedR) + math.abs(speedL) < enc:
+			speedR = self.right_drive.angle() - pastSpeedR
+			speedL = self.left_drive.angle() - pastSpeedL
+			e = speedR * sign + speedL * ratio
+			isum = isum + Ratio.Arc_ki * e
+
+			# DC motor cant drive more than 100%
+			if isum > 100:
+				isum = 100
+			elif isum < -100:
+				isum = -100
+
+			# Math stuff
+			u = Ratio.Arc_kp * e + Ratio.Arc_kd * (e - e_old) + isum
+			e_old = e
+
+			if math.abs(speedL) <= startEnc * maxPowerL_sign:
+				CurrentPower.LMotor = self.Start_Smooth(sPowerL, maxPowerL, speedL, self.boost)
+			else:
+				CurrentPower.LMotor = self.Stop_Smooth(maxPowerL, ePowerR, speedL - startEnc, self.boost)
+			
+			# Actually running the motors itself
+			self.left_drive.DC(CurrentPower.LMotor - u * sign)
+			self.right_drive.DC(CurrentPower.RMotor - u)
+		
