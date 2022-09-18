@@ -7,11 +7,13 @@ from pybricks.messaging import BluetoothMailboxServer, Mailbox
 from pybricks.parameters import Button, Color, Direction, Port, Stop
 from pybricks.robotics import DriveBase
 from pybricks.tools import DataLog, StopWatch, wait
+from pybricks.pupdevices import ColorSensor
 
 # Importing other modules
 from turn import *
 from CurrentPower import CurrentPower
 from LineFollow import LineFollow
+from utils import *
 
 
 # Initialize the brick
@@ -37,4 +39,3 @@ line_follow = LineFollow(left_sensor, right_sensor, left_motor, right_motor, Cur
 line_follow.SET_DEFAULT()
 
 turn.SmoothStart_Left(100, 100, 30, 200)
-

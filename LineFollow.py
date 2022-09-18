@@ -63,6 +63,7 @@ class LineFollow:
         # self.maxG2 = 
         # self.maxB2 = 
 
+    
     def readRGB(self):
         # For the left side sensor
         rgb1 = self.left_sensor.rgb()
