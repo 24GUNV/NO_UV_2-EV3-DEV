@@ -41,8 +41,8 @@ class Turning():
 		e_old = 0
 
 		# Inilializing speed variables
-		pastSpeedR = self.right_drive.speed()
-		pastSpeedL = self.left_drive.speed()
+		pastSpeedR = self.right_drive.angle()
+		pastSpeedL = self.left_drive.angle()
 		speedR = 0
 		speedL = 0
 
@@ -59,8 +59,8 @@ class Turning():
 
 		# Gonna turn until more than this degree
 		while math.abs(speedR) + math.abs(speedL) < degree:
-			speedR = self.right_drive.speed() - pastSpeedR
-			speedL = self.left_drive.speed() - pastSpeedL
+			speedR = self.right_drive.angle() - pastSpeedR
+			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
 			isum = isum + Ratio.Arc_ki * e
 			
@@ -90,8 +90,8 @@ class Turning():
 		boost = (maxPowerL * maxPowerL - minPowerL * minPowerL)
 
 		# Inilializing speed variables
-		pastSpeedR = self.right_drive.speed()
-		pastSpeedL = self.left_drive.speed()
+		pastSpeedR = self.right_drive.angle()
+		pastSpeedL = self.left_drive.angle()
 		speedR = 0
 		speedL = 0
 
@@ -99,8 +99,8 @@ class Turning():
 		enc = enc * 2
 
 		while math.abs(speedR) + math.abs(speedL) < degree:
-			speedR = self.right_drive.speed() - pastSpeedR
-			speedL = self.left_drive.speed() - pastSpeedL
+			speedR = self.right_drive.angle() - pastSpeedR
+			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
 			isum = isum + Ratio.Arc_ki * e
 			
@@ -133,8 +133,8 @@ class Turning():
 		e_old = 0
 
 		# Inilializing speed variables
-		pastSpeedR = self.right_drive.speed()
-		pastSpeedL = self.left_drive.speed()
+		pastSpeedR = self.right_drive.angle()
+		pastSpeedL = self.left_drive.angle()
 		speedR = 0
 		speedL = 0
 
@@ -151,8 +151,8 @@ class Turning():
 
 		# Gonna turn until more than this degree
 		while math.abs(speedR) + math.abs(speedL) < degree:
-			speedR = self.right_drive.speed() - pastSpeedR
-			speedL = self.left_drive.speed() - pastSpeedL
+			speedR = self.right_drive.angle() - pastSpeedR
+			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
 			isum = isum + Ratio.Arc_ki * e
 			
@@ -175,7 +175,7 @@ class Turning():
 
 	
 	# Function to slow it down to a stop while turning left
-	def SmoothStop_Left(self, minPowerL, minPowerR, maxPowerR, degree):
+	def SmoothStop_Right(self, minPowerL, minPowerR, maxPowerR, degree):
 		# Some mathematic calculations
 		ratio = math.abs(minPowerL / minPowerR)
 		sign = math.abs(minPowerL * minPowerR - 1) - math.abs(minPowerL * minPowerR)
@@ -183,8 +183,8 @@ class Turning():
 		boost = (maxPowerR * maxPowerR - minPowerR * minPowerR)
 
 		# Inilializing speed variables
-		pastSpeedR = self.right_drive.speed()
-		pastSpeedL = self.left_drive.speed()
+		pastSpeedR = self.right_drive.angle()
+		pastSpeedL = self.left_drive.angle()
 		speedR = 0
 		speedL = 0
 
@@ -192,8 +192,8 @@ class Turning():
 		enc = enc * 2
 
 		while math.abs(speedR) + math.abs(speedL) < degree:
-			speedR = self.right_drive.speed() - pastSpeedR
-			speedL = self.left_drive.speed() - pastSpeedL
+			speedR = self.right_drive.angle() - pastSpeedR
+			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
 			isum = isum + Ratio.Arc_ki * e
 			
@@ -217,6 +217,7 @@ class Turning():
 
 	# Function for smooth turning
 	# AKA stationary turning
+<<<<<<< Updated upstream:turn.py
 	def SmoothAll(self, sPowerL, sPowerR, ePowerL, enc):
 		ratio = math.abs(sPowerL / sPowerR)
 		sign = math.abs(sPowerL * sPowerR - 1) - math.abs(sPowerL * sPowerR)
@@ -269,3 +270,8 @@ class Turning():
 			self.left_drive.DC(CurrentPower.LMotor - u * sign)
 			self.right_drive.DC(CurrentPower.RMotor - u)
 		
+=======
+	def SmoothAll(self):
+
+		raise NotImplementedError
+>>>>>>> Stashed changes:EV3/turn.py

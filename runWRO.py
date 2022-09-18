@@ -16,7 +16,7 @@ ev3 = EV3Brick()
 # Initializing the turning functions
 
 
-left_motor = Motor(Port.A)
+left_motor = Motor(Port.C)
 right_motor = Motor(Port.D)
 # arm_rotator = Motor(Port.C)
 # arm_claw = Motor(Port.B)
