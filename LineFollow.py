@@ -63,20 +63,33 @@ class LineFollow:
         # self.maxG2 = 
         # self.maxB2 = 
 
-    def readRGB():
-        return 0
+    def readRGB(self):
+        # For the left side sensor
+        rgb1 = self.left_sensor.rgb()
+        r1, g1, b1 = rgb1[0], rgb1[1], rgb1[2]
+        self.r1 = self.mapping100(r1, self.minR1, self.maxR1)
+        self.g1 = self.mapping100(g1, self.minG1, self.maxG1)
+        self.b1 = self.mapping100(b1, self.minB1, self.maxB1)
 
-    def getS1():
-        return 0
+        # For the right side sensor
+        rgb2 = self.right_motor.rgb()
+        r2, g2, b2 = rgb2[0], rgb2[1]. rgb2[2]
+        self.r2 = self.mapping100(r2, self.minR2, self.maxR2)
+        self.g2 = self.mapping100(g2, self.minG2, self.maxG2)
+        self.b2 = self.mapping100(b2, self.minB2, self.maxB2)
+
+
+    def getS1(self):
+        return (self.r1 * self.isR1 + self.g1 * self.isG1 + self.b1 * self.isB1) / (self.isR1 + self.isG1 + self.isB1)
     
-    def getS2():
-        return 0
+    def getS2(self):
+        return (self.r2 * self.isR2 + self.g2 * self.isG2 + self.b2 * self.isB2) / (self.isR2 + self.isG2 + self.isB2)
     
-    def getCrossesS1():
-        return 0
+    def getCrossesS1(self):
+        return (self.r1 * self.rCross + self.g1 * self.gCross + self.b1 * self.bCross) / (self.rCross + self.gCross + self.bCross)
     
-    def getCrossesS2():
-        return 0
+    def getCrossesS2(self):
+        return (self.r2 * self.rCross + self.g2 * self.gCross + self.b2 * self.bCross) / (self.rCross + self.gCross + self.bCross)
 
     def Smooth_Start(V0, VMax, CEnc, a):
         return min(math.sqrt(V0 * V0 + 2 * a * CEnc), VMax)
