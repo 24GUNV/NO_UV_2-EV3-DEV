@@ -1,23 +1,25 @@
-from CurrentPower import CurrentPower
 import math
 import time
 from ratio import Ratio
+Ratios = Ratio()
 
 class LineFollow:
     left_sensor = None
     right_sensor = None
     left_motor = None
     right_motor = None
+    CurrentPower = None
 
     # Cross Variables
     borderXCross = 30
     borderLCross= 5
 
-    def __init__(self, left_sensor, right_sensor, left_motor, right_motor):
+    def __init__(self, left_sensor, right_sensor, left_motor, right_motor, currentPower):
         self.left_sensor = left_sensor
         self.right_sensor = right_sensor
         self.left_motor = left_motor
-        self.right_motor = right_motor      
+        self.right_motor = right_motor
+        self.CurrentPower = currentPower
 
     # Mapping a range of 255 to 100 scale
     def mapping255(value, min, max):
@@ -87,10 +89,10 @@ class LineFollow:
         flag = 1
         e_old = 0
         count = 0
-        CurrentPower.LineFollower = minPower
-        kp = math.sqrt(maxPower / Ratio.R_Sensor_power) * Ratio.R_Sensor_kp
-        kd = Ratio.R_Sensor_kd / Ratio.R_Sensor_kp * kp
-        ki = Ratio.R_Sensor_ki / Ratio.L_Sensor_kp * kp
+        self.CurrentPower.LineFollower = minPower
+        kp = math.sqrt(maxPower / Ratios.R_Sensor_power) * Ratios.R_Sensor_kp
+        kd = Ratios.R_Sensor_kd / Ratios.R_Sensor_kp * kp
+        ki = Ratios.R_Sensor_ki / Ratios.L_Sensor_kp * kp
         isum = 0
         c1 = 0
         c2 = 0
@@ -111,9 +113,9 @@ class LineFollow:
             u = kp * e + (e - e_old) * kd + isum
             e_old = e
             currentAngle = self.avgAngle()
-            CurrentPower.LineFollower = self.Smooth_Start(minPower, maxPower, currentAngle, 14, CurrentPower.LineFollower)
-            vb = (-u - CurrentPower.LineFollower)
-            vc = CurrentPower.LineFollower - u
+            self.CurrentPower.LineFollower = self.Smooth_Start(minPower, maxPower, currentAngle, 14, self.CurrentPower.LineFollower)
+            vb = (-u - self.CurrentPower.LineFollower)
+            vc = self.CurrentPower.LineFollower - u
             if vb > 100:
                 vb = 100
             elif vb < -100:

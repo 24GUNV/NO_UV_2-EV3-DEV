@@ -1,3 +1,4 @@
+from turtle import left, right
 from pybricks.ev3devices import (ColorSensor, GyroSensor, InfraredSensor,
                                  Motor, TouchSensor, UltrasonicSensor)
 from pybricks.hubs import EV3Brick
@@ -9,25 +10,31 @@ from pybricks.tools import DataLog, StopWatch, wait
 
 # Importing other modules
 from turn import *
+from CurrentPower import CurrentPower
+from LineFollow import LineFollow
 
-# # Initialize the brick
+
+# Initialize the brick
 ev3 = EV3Brick()
 
-# Initializing the turning functions
-
-
+# Initialize the motors
 left_motor = Motor(Port.C)
 right_motor = Motor(Port.D)
-# arm_rotator = Motor(Port.C)
-# arm_claw = Motor(Port.B)
 
-turn = Turning(left_motor, right_motor)
+# Initializing the sensors
+left_sensor = ColorSensor(Port.S1)
+right_sensor = ColorSensor(Port.S2)
+
+
+# Initialize class to store current power to run motors
+CurrentPower = CurrentPower()
+
+# Initializing the turning class
+turn = Turning(left_motor, right_motor, CurrentPower)
+
+# Initializing the line following class
+line_follow = LineFollow(left_sensor, right_sensor, left_motor, right_motor, CurrentPower)
+line_follow.SET_DEFAULT()
 
 turn.SmoothStart_Left(100, 100, 30, 200)
-
-# # Initialize the color sensor.
-# front_light = ColorSensor(Port.S1)
-# y_axis_ultrasonic = UltrasonicSensor(Port.S2)
-# gyroscope = GyroSensor(Port.S3)
-# light_sensor = ColorSensor(Port.S4)
 

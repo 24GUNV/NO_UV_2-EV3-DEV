@@ -1,23 +1,23 @@
 ## File for all of the turning functions
 
 # Libraries
-from inspect import currentframe
 import math
-from tracemalloc import start
 from ratio import Ratio
-from CurrentPower import CurrentPower
+Ratios = Ratio()
 
 # Class for the turning functions
 class Turning():
 	left_drive = None
 	right_drive = None
 	boost = 10 # The speed that the robot starts moving at
+	CurrentPower = None # Class for the current power
 
 	# Initialization functions
 	# Input is Motor Object from pybricks
-	def __init__(self, left_drive, right_drive):
+	def __init__(self, left_drive, right_drive, currentPower):
 		self.left_drive = left_drive
 		self.right_drive = right_drive
+		self.CurrentPower = currentPower
 
 	def Start_Smooth(V0, VMax, CEnc, a):
 		if V0 < 0:
@@ -62,7 +62,7 @@ class Turning():
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
-			isum = isum + Ratio.Arc_ki * e
+			isum = isum + Ratios.Arc_ki * e
 			
 			# DC motor cant drive more than 100%
 			if isum > 100:
@@ -71,15 +71,15 @@ class Turning():
 				isum = -100
 
 			# Math stuff
-			u = Ratio.Arc_kp * e + Ratio.Arc_kd * (e - e_old) + isum
+			u = Ratios.Arc_kp * e + Ratios.Arc_kd * (e - e_old) + isum
 			e_old = e
 
-			CurrentPower.LMotor = self.Start_Smooth(minPowerLeft, maxPowerLeft, speedL, self.boost)
-			CurrentPower.RMotor = maxPowerRight / maxPowerLeft * CurrentPower.LMotor # Sets the right motor to the ratio with the left motor
+			self.CurrentPower.LMotor = self.Start_Smooth(minPowerLeft, maxPowerLeft, speedL, self.boost)
+			self.CurrentPower.RMotor = maxPowerRight / maxPowerLeft * self.CurrentPower.LMotor # Sets the right motor to the ratio with the left motor
 
 			# Drives the motors
-			self.right_drive.DC(CurrentPower.RMotor - u * sign)
-			self.left_drive.DC(CurrentPower.LMotor - u)
+			self.right_drive.DC(self.CurrentPower.RMotor - u * sign)
+			self.left_drive.DC(self.CurrentPower.LMotor - u)
 
 	# Function to slow it down to a stop while turning left
 	def SmoothStop_Left(self, minPowerR, minPowerL, maxPowerL, degree):
@@ -102,7 +102,7 @@ class Turning():
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
-			isum = isum + Ratio.Arc_ki * e
+			isum = isum + Ratios.Arc_ki * e
 			
 			# DC motor cant drive more than 100%
 			if isum > 100:
@@ -111,16 +111,16 @@ class Turning():
 				isum = -100
 
 			# Math stuff
-			u = Ratio.Arc_kp * e + Ratio.Arc_kd * (e - e_old) + isum
+			u = Ratios.Arc_kp * e + Ratios.Arc_kd * (e - e_old) + isum
 			e_old = e
 
-			CurrentPower.LMotor = self.Stop_Smooth(maxPowerL, minPowerL, speedL, boost)
-			CurrentPower.RMotor = minPowerR / minPowerL * CurrentPower.LMotor # Sets the right motor to the ratio with the left motor
+			self.CurrentPower.LMotor = self.Stop_Smooth(maxPowerL, minPowerL, speedL, boost)
+			self.CurrentPower.RMotor = minPowerR / minPowerL * self.CurrentPower.LMotor # Sets the right motor to the ratio with the left motor
 
 			# Drives the motors
-			print(CurrentPower.LMotor, CurrentPower.RMotor)
-			self.right_drive.DC(CurrentPower.RMotor - u * sign)
-			self.left_drive.DC(CurrentPower.LMotor - u)
+			print(self.CurrentPower.LMotor, self.CurrentPower.RMotor)
+			self.right_drive.DC(self.CurrentPower.RMotor - u * sign)
+			self.left_drive.DC(self.CurrentPower.LMotor - u)
 
 	
 	# Function for partial turn towards the right
@@ -154,7 +154,7 @@ class Turning():
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
-			isum = isum + Ratio.Arc_ki * e
+			isum = isum + Ratios.Arc_ki * e
 			
 			# DC motor cant drive more than 100%
 			if isum > 100:
@@ -163,15 +163,15 @@ class Turning():
 				isum = -100
 
 			# Math stuff
-			u = Ratio.Arc_kp * e + Ratio.Arc_kd * (e - e_old) + isum
+			u = Ratios.Arc_kp * e + Ratios.Arc_kd * (e - e_old) + isum
 			e_old = e
 
-			CurrentPower.RMotor = self.Start_Smooth(minPowerRight, maxPowerRight, speedR, self.boost)
-			CurrentPower.LMotor = maxPowerLeft / maxPowerRight * CurrentPower.RMotor # Sets the right motor to the ratio with the left motor
+			self.CurrentPower.RMotor = self.Start_Smooth(minPowerRight, maxPowerRight, speedR, self.boost)
+			self.CurrentPower.LMotor = maxPowerLeft / maxPowerRight * self.CurrentPower.RMotor # Sets the right motor to the ratio with the left motor
 
 			# Drives the motors
-			self.right_drive.DC(CurrentPower.RMotor - u)
-			self.left_drive.DC(CurrentPower.LMotor - u * sign)
+			self.right_drive.DC(self.CurrentPower.RMotor - u)
+			self.left_drive.DC(self.CurrentPower.LMotor - u * sign)
 
 	
 	# Function to slow it down to a stop while turning left
@@ -195,7 +195,7 @@ class Turning():
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
-			isum = isum + Ratio.Arc_ki * e
+			isum = isum + Ratios.Arc_ki * e
 			
 			# DC motor cant drive more than 100%
 			if isum > 100:
@@ -204,16 +204,16 @@ class Turning():
 				isum = -100
 
 			# Math stuff
-			u = Ratio.Arc_kp * e + Ratio.Arc_kd * (e - e_old) + isum
+			u = Ratios.Arc_kp * e + Ratios.Arc_kd * (e - e_old) + isum
 			e_old = e
 
-			CurrentPower.RMotor = self.Stop_Smooth(maxPowerR, minPowerR, speedR, boost)
-			CurrentPower.LMotor = minPowerL / minPowerR * CurrentPower.RMotor # Sets the right motor to the ratio with the left motor
+			self.CurrentPower.RMotor = self.Stop_Smooth(maxPowerR, minPowerR, speedR, boost)
+			self.CurrentPower.LMotor = minPowerL / minPowerR * self.CurrentPower.RMotor # Sets the right motor to the ratio with the left motor
 
 			# Drives the motors
-			print(CurrentPower.LMotor, CurrentPower.RMotor)
-			self.right_drive.DC(CurrentPower.RMotor - u)
-			self.left_drive.DC(CurrentPower.LMotor - u * sign)
+			print(self.CurrentPower.LMotor, self.CurrentPower.RMotor)
+			self.right_drive.DC(self.CurrentPower.RMotor - u)
+			self.left_drive.DC(self.CurrentPower.LMotor - u * sign)
 
 	# Function for smooth turning
 	# AKA stationary turning
@@ -248,7 +248,7 @@ class Turning():
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
-			isum = isum + Ratio.Arc_ki * e
+			isum = isum + Ratios.Arc_ki * e
 
 			# DC motor cant drive more than 100%
 			if isum > 100:
@@ -257,17 +257,17 @@ class Turning():
 				isum = -100
 
 			# Math stuff
-			u = Ratio.Arc_kp * e + Ratio.Arc_kd * (e - e_old) + isum
+			u = Ratios.Arc_kp * e + Ratios.Arc_kd * (e - e_old) + isum
 			e_old = e
 
 			if math.abs(speedL) <= startEnc * maxPowerL_sign:
-				CurrentPower.LMotor = self.Start_Smooth(sPowerL, maxPowerL, speedL, self.boost)
+				self.CurrentPower.LMotor = self.Start_Smooth(sPowerL, maxPowerL, speedL, self.boost)
 			else:
-				CurrentPower.LMotor = self.Stop_Smooth(maxPowerL, ePowerL, speedL - startEnc, self.boost)
+				self.CurrentPower.LMotor = self.Stop_Smooth(maxPowerL, ePowerL, speedL - startEnc, self.boost)
 			
 			# Actually running the motors itself
-			self.left_drive.DC(CurrentPower.LMotor - u * sign)
-			self.right_drive.DC(CurrentPower.RMotor - u)
+			self.left_drive.DC(self.CurrentPower.LMotor - u * sign)
+			self.right_drive.DC(self.CurrentPower.RMotor - u)
 		
 	
 	def SmoothAll_R(self, sPowerL, sPowerR, ePowerR, enc):
@@ -301,7 +301,7 @@ class Turning():
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
-			isum = isum + Ratio.Arc_ki * e
+			isum = isum + Ratios.Arc_ki * e
 
 			# DC motor cant drive more than 100%
 			if isum > 100:
@@ -310,15 +310,15 @@ class Turning():
 				isum = -100
 
 			# Math stuff
-			u = Ratio.Arc_kp * e + Ratio.Arc_kd * (e - e_old) + isum
+			u = Ratios.Arc_kp * e + Ratios.Arc_kd * (e - e_old) + isum
 			e_old = e
 
 			if math.abs(speedL) <= startEnc * maxPowerL_sign:
-				CurrentPower.LMotor = self.Start_Smooth(sPowerL, maxPowerL, speedL, self.boost)
+				self.CurrentPower.LMotor = self.Start_Smooth(sPowerL, maxPowerL, speedL, self.boost)
 			else:
-				CurrentPower.LMotor = self.Stop_Smooth(maxPowerL, ePowerR, speedL - startEnc, self.boost)
+				self.CurrentPower.LMotor = self.Stop_Smooth(maxPowerL, ePowerR, speedL - startEnc, self.boost)
 			
 			# Actually running the motors itself
-			self.left_drive.DC(CurrentPower.LMotor - u * sign)
-			self.right_drive.DC(CurrentPower.RMotor - u)
+			self.left_drive.DC(self.CurrentPower.LMotor - u * sign)
+			self.right_drive.DC(self.CurrentPower.RMotor - u)
 		
