@@ -2,3 +2,6 @@
 class CurrentPower:
 	LMotor = 0
 	RMotor = 0
+
+	# Current value for line
+	LineFollower = 0
