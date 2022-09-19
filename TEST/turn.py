@@ -19,13 +19,13 @@ class Turning():
 		self.right_drive = right_drive
 		self.CurrentPower = currentPower
 
-	def Start_Smooth(V0, VMax, CEnc, a):
+	def Start_Smooth(self, V0, VMax, CEnc, a):
 		if V0 < 0:
 			return max(-math.sqrt(V0 * V0 - 2 * a * CEnc) + VMax, VMax)
 		else:
 			return max(math.sqrt(V0 * V0 + 2 * a * CEnc) + VMax, VMax)
 
-	def Stop_Smooth(V0, VMin, CEnc, a):
+	def Stop_Smooth(self, V0, VMin, CEnc, a):
 		if V0 < 0:
 			return min(-math.sqrt(V0 * V0 - 2 * a * CEnc) + VMin, VMin)
 		else:
@@ -36,8 +36,8 @@ class Turning():
 	# degrees = motor degrees turned
 	def SmoothStart_Left(self, maxPowerRight: int, maxPowerLeft: int, minPowerLeft: int, degree: int):
 		# Some mathematic calculations
-		ratio = math.abs(maxPowerRight / maxPowerLeft)
-		sign = math.abs(maxPowerRight * maxPowerLeft - 1) - math.abs(maxPowerLeft * maxPowerRight)
+		ratio = abs(maxPowerRight / maxPowerLeft)
+		sign = abs(maxPowerRight * maxPowerLeft - 1) - abs(maxPowerLeft * maxPowerRight)
 		e_old = 0
 
 		# Inilializing speed variables
@@ -47,7 +47,7 @@ class Turning():
 		speedL = 0
 
 		isum = 0
-		enc = enc * 2
+		degree = degree * 2
 
 		# # Starting the motors to move
 		# init_L = max(self.boost, pastSpeedL)
@@ -58,7 +58,7 @@ class Turning():
 		# CurrentPower.RMotor = init_R
 
 		# Gonna turn until more than this degree
-		while math.abs(speedR) + math.abs(speedL) < degree:
+		while abs(speedR) + abs(speedL) < degree:
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
@@ -78,8 +78,8 @@ class Turning():
 			self.CurrentPower.RMotor = maxPowerRight / maxPowerLeft * self.CurrentPower.LMotor # Sets the right motor to the ratio with the left motor
 
 			# Drives the motors
-			self.right_drive.DC(self.CurrentPower.RMotor - u * sign)
-			self.left_drive.DC(self.CurrentPower.LMotor - u)
+			self.right_drive.dc(self.CurrentPower.RMotor - u * sign)
+			self.left_drive.dc(self.CurrentPower.LMotor - u)
 
 	# Function to slow it down to a stop while turning left
 	def SmoothStop_Left(self, minPowerR, minPowerL, maxPowerL, degree):

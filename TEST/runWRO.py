@@ -24,8 +24,8 @@ left_motor = Motor(Port.C)
 right_motor = Motor(Port.D)
 
 # Initializing the sensors
-left_sensor = ColorSensor(Port.S1)
-right_sensor = ColorSensor(Port.S2)
+# left_sensor = ColorSensor(Port.S1)
+# right_sensor = ColorSensor(Port.S2)
 
 
 # Initialize class to store current power to run motors
@@ -35,7 +35,7 @@ CurrentPower = CurrentPower()
 turn = Turning(left_motor, right_motor, CurrentPower)
 
 # Initializing the line following class
-line_follow = LineFollow(left_sensor, right_sensor, left_motor, right_motor, CurrentPower)
-line_follow.SET_DEFAULT()
+# line_follow = LineFollow(left_sensor, right_sensor, left_motor, right_motor, CurrentPower)
+# line_follow.SET_DEFAULT()
 
 turn.SmoothStart_Left(100, 100, 30, 200)
