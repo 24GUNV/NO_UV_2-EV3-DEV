@@ -84,8 +84,8 @@ class Turning():
 	# Function to slow it down to a stop while turning left
 	def SmoothStop_Left(self, minPowerR, minPowerL, maxPowerL, degree):
 		# Some mathematic calculations
-		ratio = math.abs(minPowerR / minPowerL)
-		sign = math.abs(minPowerR * minPowerL - 1) - math.abs(minPowerR * minPowerL)
+		ratio = abs(minPowerR / minPowerL)
+		sign = abs(minPowerR * minPowerL - 1) - abs(minPowerR * minPowerL)
 		e_old = 0
 		boost = (maxPowerL * maxPowerL - minPowerL * minPowerL)
 
@@ -98,7 +98,7 @@ class Turning():
 		isum = 0
 		enc = enc * 2
 
-		while math.abs(speedR) + math.abs(speedL) < degree:
+		while abs(speedR) + abs(speedL) < degree:
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
@@ -119,8 +119,8 @@ class Turning():
 
 			# Drives the motors
 			print(self.CurrentPower.LMotor, self.CurrentPower.RMotor)
-			self.right_drive.DC(self.CurrentPower.RMotor - u * sign)
-			self.left_drive.DC(self.CurrentPower.LMotor - u)
+			self.right_drive.dc(self.CurrentPower.RMotor - u * sign)
+			self.left_drive.dc(self.CurrentPower.LMotor - u)
 
 	
 	# Function for partial turn towards the right
@@ -128,8 +128,8 @@ class Turning():
 	# degrees = motor degrees turned
 	def SmoothStart_Right(self, maxPowerLeft: int, maxPowerRight: int, minPowerRight: int, degree: int):
 		# Some mathematic calculations
-		ratio = math.abs(maxPowerLeft / maxPowerRight)
-		sign = math.abs(maxPowerLeft * maxPowerRight - 1) - math.abs(maxPowerRight * maxPowerLeft)
+		ratio = abs(maxPowerLeft / maxPowerRight)
+		sign = abs(maxPowerLeft * maxPowerRight - 1) - abs(maxPowerRight * maxPowerLeft)
 		e_old = 0
 
 		# Inilializing speed variables
@@ -150,7 +150,7 @@ class Turning():
 		# CurrentPower.RMotor = init_R
 
 		# Gonna turn until more than this degree
-		while math.abs(speedR) + math.abs(speedL) < degree:
+		while abs(speedR) + abs(speedL) < degree:
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
@@ -170,15 +170,15 @@ class Turning():
 			self.CurrentPower.LMotor = maxPowerLeft / maxPowerRight * self.CurrentPower.RMotor # Sets the right motor to the ratio with the left motor
 
 			# Drives the motors
-			self.right_drive.DC(self.CurrentPower.RMotor - u)
-			self.left_drive.DC(self.CurrentPower.LMotor - u * sign)
+			self.right_drive.dc(self.CurrentPower.RMotor - u)
+			self.left_drive.dc(self.CurrentPower.LMotor - u * sign)
 
 	
 	# Function to slow it down to a stop while turning left
 	def SmoothStop_Right(self, minPowerL, minPowerR, maxPowerR, degree):
 		# Some mathematic calculations
-		ratio = math.abs(minPowerL / minPowerR)
-		sign = math.abs(minPowerL * minPowerR - 1) - math.abs(minPowerL * minPowerR)
+		ratio = abs(minPowerL / minPowerR)
+		sign = abs(minPowerL * minPowerR - 1) - abs(minPowerL * minPowerR)
 		e_old = 0
 		boost = (maxPowerR * maxPowerR - minPowerR * minPowerR)
 
@@ -191,7 +191,7 @@ class Turning():
 		isum = 0
 		enc = enc * 2
 
-		while math.abs(speedR) + math.abs(speedL) < degree:
+		while abs(speedR) + abs(speedL) < degree:
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
@@ -212,14 +212,14 @@ class Turning():
 
 			# Drives the motors
 			print(self.CurrentPower.LMotor, self.CurrentPower.RMotor)
-			self.right_drive.DC(self.CurrentPower.RMotor - u)
-			self.left_drive.DC(self.CurrentPower.LMotor - u * sign)
+			self.right_drive.dc(self.CurrentPower.RMotor - u)
+			self.left_drive.dc(self.CurrentPower.LMotor - u * sign)
 
 	# Function for smooth turning
 	# AKA stationary turning
 	def SmoothAll_L(self, sPowerL, sPowerR, ePowerL, enc):
-		ratio = math.abs(sPowerL / sPowerR)
-		sign = math.abs(sPowerL * sPowerR - 1) - math.abs(sPowerL * sPowerR)
+		ratio = abs(sPowerL / sPowerR)
+		sign = abs(sPowerL * sPowerR - 1) - abs(sPowerL * sPowerR)
 		e_old = 0
 		
 		# Inilializing speed variables
@@ -240,11 +240,11 @@ class Turning():
 			maxPowerL = 100
 			startEnc = (10000 - sPowerL * sPowerL) / 2 / self.boost + excess
 		
-		maxPowerL_sign = sPowerL / math.abs(sPowerL)
+		maxPowerL_sign = sPowerL / abs(sPowerL)
 		maxPowerL = maxPowerL * maxPowerL_sign
 		startEnc = startEnc * maxPowerL_sign
 
-		while math.abs(speedR) + math.abs(speedL) < enc:
+		while abs(speedR) + abs(speedL) < enc:
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
@@ -260,19 +260,19 @@ class Turning():
 			u = Ratios.Arc_kp * e + Ratios.Arc_kd * (e - e_old) + isum
 			e_old = e
 
-			if math.abs(speedL) <= startEnc * maxPowerL_sign:
+			if abs(speedL) <= startEnc * maxPowerL_sign:
 				self.CurrentPower.LMotor = self.Start_Smooth(sPowerL, maxPowerL, speedL, self.boost)
 			else:
 				self.CurrentPower.LMotor = self.Stop_Smooth(maxPowerL, ePowerL, speedL - startEnc, self.boost)
 			
 			# Actually running the motors itself
-			self.left_drive.DC(self.CurrentPower.LMotor - u * sign)
-			self.right_drive.DC(self.CurrentPower.RMotor - u)
+			self.left_drive.dc(self.CurrentPower.LMotor - u * sign)
+			self.right_drive.dc(self.CurrentPower.RMotor - u)
 		
 	
 	def SmoothAll_R(self, sPowerL, sPowerR, ePowerR, enc):
-		ratio = math.abs(sPowerL / sPowerR)
-		sign = math.abs(sPowerL * sPowerR - 1) - math.abs(sPowerL * sPowerR)
+		ratio = abs(sPowerL / sPowerR)
+		sign = abs(sPowerL * sPowerR - 1) - abs(sPowerL * sPowerR)
 		e_old = 0
 		
 		# Inilializing speed variables
@@ -293,11 +293,11 @@ class Turning():
 			maxPowerL = 100
 			startEnc = (10000 - sPowerL * sPowerL) / 2 / self.boost + excess
 		
-		maxPowerL_sign = sPowerL / math.abs(sPowerL)
+		maxPowerL_sign = sPowerL / abs(sPowerL)
 		maxPowerL = maxPowerL * maxPowerL_sign
 		startEnc = startEnc * maxPowerL_sign
 
-		while math.abs(speedR) + math.abs(speedL) < enc:
+		while abs(speedR) + abs(speedL) < enc:
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
@@ -313,12 +313,12 @@ class Turning():
 			u = Ratios.Arc_kp * e + Ratios.Arc_kd * (e - e_old) + isum
 			e_old = e
 
-			if math.abs(speedL) <= startEnc * maxPowerL_sign:
+			if abs(speedL) <= startEnc * maxPowerL_sign:
 				self.CurrentPower.LMotor = self.Start_Smooth(sPowerL, maxPowerL, speedL, self.boost)
 			else:
 				self.CurrentPower.LMotor = self.Stop_Smooth(maxPowerL, ePowerR, speedL - startEnc, self.boost)
 			
 			# Actually running the motors itself
-			self.left_drive.DC(self.CurrentPower.LMotor - u * sign)
-			self.right_drive.DC(self.CurrentPower.RMotor - u)
+			self.left_drive.dc(self.CurrentPower.LMotor - u * sign)
+			self.right_drive.dc(self.CurrentPower.RMotor - u)
 		
