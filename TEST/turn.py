@@ -126,7 +126,7 @@ class Turning():
 	# Function for partial turn towards the right
 	# maxPowerRight, maxPowerLeft, minPowerLeft from -100 to 100 (%)
 	# degrees = motor degrees turned
-	def SmoothStart_Right(self, maxPowerLeft: int, maxPowerRight: int, minPowerRight: int, degree: int):
+	def SmoothStart_Right(self, maxPowerLeft: int, maxPowerRight: int, minPowerRight: int, enc: int):
 		# Some mathematic calculations
 		ratio = abs(maxPowerLeft / maxPowerRight)
 		sign = abs(maxPowerLeft * maxPowerRight - 1) - abs(maxPowerRight * maxPowerLeft)
@@ -150,7 +150,7 @@ class Turning():
 		# CurrentPower.RMotor = init_R
 
 		# Gonna turn until more than this degree
-		while abs(speedR) + abs(speedL) < degree:
+		while abs(speedR) + abs(speedL) < enc:
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
 			e = speedR * sign + speedL * ratio
@@ -189,7 +189,7 @@ class Turning():
 		speedL = 0
 
 		isum = 0
-		enc = enc * 2
+		degree = degree * 2
 
 		while abs(speedR) + abs(speedL) < degree:
 			speedR = self.right_drive.angle() - pastSpeedR
@@ -210,8 +210,8 @@ class Turning():
 			self.CurrentPower.RMotor = self.Stop_Smooth(maxPowerR, minPowerR, speedR, boost)
 			self.CurrentPower.LMotor = minPowerL / minPowerR * self.CurrentPower.RMotor # Sets the right motor to the ratio with the left motor
 
-			# Drives the motors
 			print(self.CurrentPower.LMotor, self.CurrentPower.RMotor)
+			# Drives the motors
 			self.right_drive.dc(self.CurrentPower.RMotor - u)
 			self.left_drive.dc(self.CurrentPower.LMotor - u * sign)
 
