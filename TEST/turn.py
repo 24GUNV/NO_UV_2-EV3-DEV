@@ -13,7 +13,7 @@ class Turning():
 	CurrentPower = None # Class for the current power
 
 	# Initialization functions
-	# Input is Motor Object from pybricks
+	# Input is Motor Object from pybricks and currentPower class
 	def __init__(self, left_drive, right_drive, currentPower):
 		self.left_drive = left_drive
 		self.right_drive = right_drive
@@ -36,8 +36,8 @@ class Turning():
 	# degrees = motor degrees turned
 	def SmoothStart_Left(self, maxPowerRight: int, maxPowerLeft: int, minPowerLeft: int, degree: int):
 		# Some mathematic calculations
-		ratio = abs(maxPowerRight / maxPowerLeft)
-		sign = abs(maxPowerRight * maxPowerLeft - 1) - abs(maxPowerLeft * maxPowerRight)
+		ratio = abs(maxPowerLeft / maxPowerRight)
+		sign = abs(maxPowerLeft * maxPowerRight - 1) - abs(maxPowerLeft * maxPowerRight)
 		e_old = 0
 
 		# Inilializing speed variables
@@ -61,7 +61,7 @@ class Turning():
 		while abs(speedR) + abs(speedL) < degree:
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
-			e = speedR * sign + speedL * ratio
+			e = speedL * sign + speedR * ratio
 			isum = isum + Ratios.Arc_ki * e
 			
 			# DC motor cant drive more than 100%
@@ -78,14 +78,14 @@ class Turning():
 			self.CurrentPower.RMotor = maxPowerRight / maxPowerLeft * self.CurrentPower.LMotor # Sets the right motor to the ratio with the left motor
 
 			# Drives the motors
-			self.right_drive.dc(self.CurrentPower.RMotor - u * sign)
-			self.left_drive.dc(self.CurrentPower.LMotor - u)
+			self.left_drive.dc(self.CurrentPower.LMotor - u * sign)
+			self.right_drive.dc(self.CurrentPower.Right - u)
 
 	# Function to slow it down to a stop while turning left
 	def SmoothStop_Left(self, minPowerR, minPowerL, maxPowerL, degree):
 		# Some mathematic calculations
-		ratio = abs(minPowerR / minPowerL)
-		sign = abs(minPowerR * minPowerL - 1) - abs(minPowerR * minPowerL)
+		ratio = abs(minPowerL / minPowerR)
+		sign = abs(minPowerL * minPowerR - 1) - abs(minPowerL * minPowerR)
 		e_old = 0
 		boost = (maxPowerL * maxPowerL - minPowerL * minPowerL)
 
@@ -101,7 +101,7 @@ class Turning():
 		while abs(speedR) + abs(speedL) < degree:
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
-			e = speedR * sign + speedL * ratio
+			e = speedL * sign + speedR * ratio
 			isum = isum + Ratios.Arc_ki * e
 			
 			# DC motor cant drive more than 100%
@@ -119,8 +119,8 @@ class Turning():
 
 			# Drives the motors
 			print(self.CurrentPower.LMotor, self.CurrentPower.RMotor)
-			self.right_drive.dc(self.CurrentPower.RMotor - u * sign)
-			self.left_drive.dc(self.CurrentPower.LMotor - u)
+			self.left_drive.dc(self.CurrentPower.LMotor - u * sign)
+			self.right_drive.dc(self.CurrentPower.RMotor - u)
 
 	
 	# Function for partial turn towards the right
@@ -129,7 +129,7 @@ class Turning():
 	def SmoothStart_Right(self, maxPowerLeft: int, maxPowerRight: int, minPowerRight: int, enc: int):
 		# Some mathematic calculations
 		ratio = abs(maxPowerLeft / maxPowerRight)
-		sign = abs(maxPowerLeft * maxPowerRight - 1) - abs(maxPowerRight * maxPowerLeft)
+		sign = abs(maxPowerLeft * maxPowerRight - 1) - abs(maxPowerLeft * maxPowerRight)
 		e_old = 0
 
 		# Inilializing speed variables
@@ -153,7 +153,7 @@ class Turning():
 		while abs(speedR) + abs(speedL) < enc:
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
-			e = speedR * sign + speedL * ratio
+			e = speedL * sign + speedR * ratio
 			isum = isum + Ratios.Arc_ki * e
 			
 			# DC motor cant drive more than 100%
@@ -170,8 +170,8 @@ class Turning():
 			self.CurrentPower.LMotor = maxPowerLeft / maxPowerRight * self.CurrentPower.RMotor # Sets the right motor to the ratio with the left motor
 
 			# Drives the motors
-			self.right_drive.dc(self.CurrentPower.RMotor - u)
 			self.left_drive.dc(self.CurrentPower.LMotor - u * sign)
+			self.right_drive.dc(self.CurrentPower.RMotor - u)
 
 	
 	# Function to slow it down to a stop while turning left
@@ -194,7 +194,7 @@ class Turning():
 		while abs(speedR) + abs(speedL) < degree:
 			speedR = self.right_drive.angle() - pastSpeedR
 			speedL = self.left_drive.angle() - pastSpeedL
-			e = speedR * sign + speedL * ratio
+			e = speedL * sign + speedR * ratio
 			isum = isum + Ratios.Arc_ki * e
 			
 			# DC motor cant drive more than 100%
@@ -212,8 +212,8 @@ class Turning():
 
 			print(self.CurrentPower.LMotor, self.CurrentPower.RMotor)
 			# Drives the motors
+			self.left_Drive.dc(self.CurrentPower.LMotor - u * sign)
 			self.right_drive.dc(self.CurrentPower.RMotor - u)
-			self.left_drive.dc(self.CurrentPower.LMotor - u * sign)
 
 	# Function for smooth turning
 	# AKA stationary turning

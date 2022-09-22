@@ -1,14 +1,13 @@
 #!/usr/bin/env pybricks-micropython
 
+from pybricks.hubs import EV3Brick
 from pybricks.ev3devices import (GyroSensor, InfraredSensor,
                                  Motor, TouchSensor, UltrasonicSensor)
-from pybricks.hubs import EV3Brick
 from pybricks.media.ev3dev import ImageFile, SoundFile
 from pybricks.messaging import BluetoothMailboxServer, Mailbox
 from pybricks.parameters import Button, Color, Direction, Port, Stop
 from pybricks.robotics import DriveBase
 from pybricks.tools import DataLog, StopWatch, wait
-# from pybricks.pupdevices import ColorSensor
 
 # Importing other modules
 from turn import *
@@ -40,3 +39,4 @@ turn = Turning(left_motor, right_motor, CurrentPower)
 # line_follow.SET_DEFAULT()
 
 turn.SmoothStart_Left(100, 100, 30, 200)
+turn.SmoothStart_Right(100, 100, 30, 200)
