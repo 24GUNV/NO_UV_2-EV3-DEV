@@ -1,6 +1,6 @@
-# EV3 Robot Code
+# EV3 Robot Development
 
-The EV3 Robot Code repository contains code for programming EV3 robots. The code is designed to provide various functions for robot movement, including turning, line following, and more. By utilizing these functions, users can easily control and program their EV3 robots for different tasks and challenges.
+The EV3 Robot Development repository contains code for programming EV3 robots. The code is designed to provide various functions for robot movement, including turning, line following, and more. By utilizing these functions, users can easily control and program their EV3 robots for different tasks and challenges.
 
 ## Table of Contents
 
